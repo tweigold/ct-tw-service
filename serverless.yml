@@ -1,0 +1,33 @@
+# serverless.yml
+service: launchService
+
+package:
+  exclude:
+    - node_modules
+    
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: us-east-2
+  memorySize: 512 # optional, in MB, default is 1024
+  timeout: 20 # optional, in seconds, default is 6
+  stage: dev
+  profile: test-code
+  versionFunctions: false # optional, default is true  
+
+functions:
+  getHouses:
+    handler: src/app/gotService.getHouses # required, handler set in AWS Lambda    
+    description: Description of what the lambda function does # optional, Description to publish to AWS
+    reservedConcurrency: 5 # optional, reserved concurrency limit for this function. By default, AWS uses account concurrency limit
+    events:
+      - http:
+          path: got-houses
+          method: get
+          cors:
+            origins:
+              - '*'
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+  
